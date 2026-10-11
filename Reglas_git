@@ -1,0 +1,10 @@
+git init
+git status
+git add carpeta_que_quieras_agregar
+git commit -m "name_of_photo" (Toma la captura de la carpeta)
+git log (toda la informacion de los cambios que se hacen)
+git branch -M new_name (Establece un nuevo nombre para el master)
+git remote add origin https:/link_del_repositorio_de_github (Une el codigo con el link de github, solo hace el enlace)
+git push -u origin master (sube la informacion al repositorio enlazado)
+git pull (trae los cambios que se hicieron desde el repositorio, hasta contigo)
+git clone https:/URL_del_repositorio (clona el repositorio que pusiste de github (entrar en <>code) en una carpeta)
