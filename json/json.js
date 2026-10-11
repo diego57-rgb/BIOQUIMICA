@@ -4,55 +4,55 @@ var dataJson = [{
     name: "molecule",
     atoms:[{
         position: {
-        posX: 1080,
+        posX: 550,
         posY: 200
         },
         width: pixW,
         height: pixW,
-        velX: 1,
-        velY: 1,
-        color: "green",
+        velX: 0,
+        velY: 0,
+        color: "red",
         name: "atom",
-        charge: [],
+        charge: 2,
     },
     {
         position: {
-        posX: 1000,
-        posY: 200
+        posX: 600,
+        posY: 250
         },
         width: pixW,
         height: pixW,
-        velX: 10,
-        velY: 10,
+        velX: 0,
+        velY: 0,
         color: "green",
         name: "atom",
-        charge: [],
+        charge: -1,
     },
     {
         position: {
-        posX: 100,
-        posY: 200
+        posX: 530,
+        posY: 230
         },
         width: pixW,
         height: pixW,
-        velX: 5,
-        velY: 5,
+        velX: 0,
+        velY: 0,
         color: "green",
         name: "atom",
-        charge: [],
+        charge: -2,
     },
     {
         position: {
-        posX: 500,
-        posY: 200
+        posX: 630,
+        posY: 330
         },
         width: pixW,
         height: pixW,
-        velX: 7,
-        velY: 7,
-        color: "green",
+        velX: 0,
+        velY: 0,
+        color: "red",
         name: "atom",
-        charge: [],
+        charge: 4,
     },]
 },
 //second molecule
@@ -60,55 +60,55 @@ var dataJson = [{
     name: "molecule",
     atoms:[{
         position: {
-        posX: 80,
-        posY: 200
+        posX: 680,
+        posY: 480
         },
         width: pixW,
         height: pixW,
-        velX: 1,
-        velY: 1,
-        color: "red",
+        velX: 0,
+        velY: 0,
+        color: "green",
         name: "atom",
-        charge: [],
+        charge: -1,
     },
     {
         position: {
-        posX: 10,
-        posY: 200
+        posX: 570,
+        posY: 270
         },
         width: pixW,
         height: pixW,
-        velX: 10,
-        velY: 10,
-        color: "red",
+        velX: 0,
+        velY: 0,
+        color: "green",
         name: "atom",
-        charge: [],
+        charge: -2,
     },
     {
         position: {
-        posX: 1,
-        posY: 200
+        posX: 300,
+        posY: 400
         },
         width: pixW,
         height: pixW,
-        velX: 5,
-        velY: 5,
+        velX: 0,
+        velY: 0,
         color: "red",
         name: "atom",
-        charge: [],
+        charge: 1,
     },
     {
         position: {
-        posX: 5,
-        posY: 200
+        posX: 210,
+        posY: 390
         },
         width: pixW,
         height: pixW,
-        velX: 7,
-        velY: 7,
+        velX: 0,
+        velY: 0,
         color: "red",
         name: "atom",
-        charge: [],
+        charge: 4,
     },]
 }
 ];

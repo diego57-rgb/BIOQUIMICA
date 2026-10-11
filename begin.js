@@ -170,7 +170,7 @@ setInterval(()=>{
             ctx.fillStyle = objectColor;
 
             if(movement_x_ON_OUT && x_or_y == "x"){
-                ctx.clearRect(objectX-1, objectY, objectWidth, objectHeight)
+                ctx.clearRect(objectX, objectY, objectWidth, objectHeight)
                 switch(xDirection){     
                     case "a": 
                     case "ArrowLeft":
@@ -203,7 +203,7 @@ setInterval(()=>{
                     }   
             }
             if(movement_y_ON_OUT && x_or_y == "y"){
-                ctx.clearRect(objectX-1, objectY, objectWidth, objectHeight)
+                ctx.clearRect(objectX, objectY, objectWidth, objectHeight)
                 switch(yDirection){     
                     case "w":
                     case "ArrowUp":
@@ -252,8 +252,81 @@ const coulomb = 9e10// Coulombs
 
 //columb * (unitCharge * electronCharge1) + (unitCharge * -electronCharge1) / (distanceX^2) = force
 
-function setVelocity(){
+const sensitivity = 0.000000001
 
+//Para hacer que atraiga lo atomos
+function setVelocity(){
+    for(let i in dataJson){
+        if(dataJson[i].atoms.length > 1){
+            for(let j in dataJson[i].atoms){
+                for(let k in dataJson[i].atoms){
+                    if(j != k){
+                        let charge1 = dataJson[i].atoms[j].charge
+                        let charge2 = dataJson[i].atoms[k].charge
+
+                        let distanceX = dataJson[i].atoms[j].position.posX - dataJson[i].atoms[k].position.posX
+                        let distanceY = dataJson[i].atoms[j].position.posY - dataJson[i].atoms[k].position.posY
+                        let distance = Math.sqrt(distanceX**2 + distanceY**2)
+                        let force = coulomb * (UnitCharge * electronCharge * charge1 + UnitCharge * -electronCharge * charge2) / ((distance**2)*sensitivity)
+                        let acceleration = force / 1 //mass of the atom is 1
+                        let velX = acceleration * (distanceX / distance)
+                        let velY = acceleration * (distanceY / distance)
+                        dataJson[i].atoms[j].velX += velX
+                        dataJson[i].atoms[j].velY += velY
+                        console.log("Force: ", force, "Acceleration: ", acceleration, "VelX: ", velX, "VelY: ", velY)
+                    }
+                }
+            }
+        }
+    }
 }
 
+function setPosition(indexI, indexJ){
+    for(let i in dataJson){
+        for(let j in dataJson[i].atoms){
+            if(indexI == i&& indexJ == j){
+                dataJson[i].atoms[j].position.posX += dataJson[i].atoms[j].velX
+                dataJson[i].atoms[j].position.posY += dataJson[i].atoms[j].velY
+            }
+        }
+    }
+}
+function setPositionReview(indexI, indexJ){
+    for(let i in dataJson){
+        for(let j in dataJson[i].atoms){
+            if(indexI == i&& indexJ == j){
+                dataJson[i].atoms[j].position.posX += dataJson[i].atoms[j].velX
+                dataJson[i].atoms[j].position.posY += dataJson[i].atoms[j].velY
+                return [dataJson[i].atoms[j].position.posX, dataJson[i].atoms[j].position.posY]
+            }
+        }
+    }
+}
 
+setInterval(()=>{
+    setVelocity()
+    
+    for(let i in dataJson){
+        for(let j in dataJson[i].atoms){
+            let objectX = dataJson[i].atoms[j].position.posX
+            let objectY = dataJson[i].atoms[j].position.posY
+            let objectWidth = dataJson[i].atoms[j].width
+            let objectHeight = dataJson[i].atoms[j].height
+            let objectColor = dataJson[i].atoms[j].color
+            ctx.clearRect(objectX, objectY, objectWidth, objectHeight)
+
+            pos = setPositionReview(i, j)
+            
+
+            setPosition(i, j)
+            objectX = dataJson[i].atoms[j].position.posX
+            objectY = dataJson[i].atoms[j].position.posY
+            objectWidth = dataJson[i].atoms[j].width
+            objectHeight = dataJson[i].atoms[j].height
+            ctx.fillStyle = objectColor;
+            ctx.beginPath();
+            ctx.roundRect(objectX, objectY, objectWidth, objectHeight,50);
+            ctx.fill();
+        }
+    }
+}, 1000/60)
