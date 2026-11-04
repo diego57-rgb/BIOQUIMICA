@@ -321,7 +321,7 @@ setInterval(()=>{
             let objectWidth = dataJson[i].atoms[j].width
             let objectHeight = dataJson[i].atoms[j].height
             let objectColor = dataJson[i].atoms[j].color
-            ctx.clearRect(objectX, objectY, objectWidth, objectHeight)
+            //ctx.clearRect(objectX, objectY, objectWidth, objectHeight)
 
             let pos = setPositionReview(i, j)
             

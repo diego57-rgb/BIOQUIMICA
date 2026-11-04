@@ -12,17 +12,13 @@ function createMolecule(){
                 height: pixW,
                 velX: 0,
                 velY: 0,
-                color: "",
+                color: `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`,
                 name: "atom",
                 charge: Math.floor(Math.random() * 3) - 1, 
                 active: false,
                 force: 0,
             }
-            if(atom.charge > 0){
-                atom.color = "red"
-            }else if(atom.charge < 0){
-                atom.color = "green"
-            }
+            
 
             dataJson[i].atoms.push(atom)
         }

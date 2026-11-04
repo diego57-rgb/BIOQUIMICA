@@ -1,4 +1,4 @@
-const pixW = 1;
+const pixW = 20;
 
 var dataJson = [{
     name: "molecule",
