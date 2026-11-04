@@ -170,7 +170,7 @@ setInterval(()=>{
             ctx.fillStyle = objectColor;
 
             if(movement_x_ON_OUT && x_or_y == "x"){
-                ctx.clearRect(objectX-1, objectY, objectWidth, objectHeight)
+                ctx.clearRect(objectX, objectY, objectWidth, objectHeight)
                 switch(xDirection){     
                     case "a": 
                     case "ArrowLeft":
@@ -203,7 +203,7 @@ setInterval(()=>{
                     }   
             }
             if(movement_y_ON_OUT && x_or_y == "y"){
-                ctx.clearRect(objectX-1, objectY, objectWidth, objectHeight)
+                ctx.clearRect(objectX, objectY, objectWidth, objectHeight)
                 switch(yDirection){     
                     case "w":
                     case "ArrowUp":
@@ -252,8 +252,105 @@ const coulomb = 9e10// Coulombs
 
 //columb * (unitCharge * electronCharge1) + (unitCharge * -electronCharge1) / (distanceX^2) = force
 
-function setVelocity(){
+const sensitivity = 0.000000001
 
+//Para hacer que atraiga lo atomos
+function setVelocity(){
+    for(let i in dataJson){
+        if(dataJson[i].atoms.length > 1){
+            for(let j in dataJson[i].atoms){
+                for(let k in dataJson[i].atoms){
+                    if(j != k){
+                        let charge1 = dataJson[i].atoms[j].charge
+                        let charge2 = dataJson[i].atoms[k].charge 
+
+                        let distanceX = dataJson[i].atoms[j].position.posX - dataJson[i].atoms[k].position.posX
+                        let distanceY = dataJson[i].atoms[j].position.posY - dataJson[i].atoms[k].position.posY
+                        let distance = Math.sqrt(distanceX**2 + distanceY**2)
+                        let force = 0
+                        if(charge1 < 0 && distance > 10){
+                            if(charge2 < 0){
+                                force = coulomb * (UnitCharge * -electronCharge * charge1 + UnitCharge * -electronCharge * charge2) / ((distance**2)*sensitivity)
+                            }else if(charge2 > 0){
+                                force = coulomb * (UnitCharge * electronCharge * charge1 + UnitCharge * -electronCharge * charge2) / ((distance**2)*sensitivity)
+                            }
+                            
+                        }else if(charge1 > 0 && distance > 10){
+                            if(charge2 < 0){
+                                force = coulomb * (UnitCharge * -electronCharge * charge1 + UnitCharge * electronCharge * charge2) / ((distance**2)*sensitivity)
+                            }else if(charge2 > 0){
+                                force = coulomb * (UnitCharge * electronCharge * charge1 + UnitCharge * electronCharge * charge2) / ((distance**2)*sensitivity)
+                            }
+                        }
+
+                        dataJson[i].atoms[j].force = force
+                        
+                        let acceleration = force
+                        let acelX = acceleration * (distanceX / distance)
+                        let acelY = acceleration * (distanceY / distance)
+                        dataJson[i].atoms[j].velX += acelX
+                        dataJson[i].atoms[j].velY += acelY
+                        
+                    }
+                }
+            }
+        }
+    }
 }
 
+function setPosition(indexI, indexJ){
+    dataJson[indexI].atoms[indexJ].position.posX += dataJson[indexI].atoms[indexJ].velX
+    dataJson[indexI].atoms[indexJ].position.posY += dataJson[indexI].atoms[indexJ].velY
+}
+function setPositionReview(indexI, indexJ){
+    dataJson[indexI].atoms[indexJ].position.posX += dataJson[indexI].atoms[indexJ].velX
+    dataJson[indexI].atoms[indexJ].position.posY += dataJson[indexI].atoms[indexJ].velY
+    return [dataJson[indexI].atoms[indexJ].position.posX, dataJson[indexI].atoms[indexJ].position.posY]
+}
 
+var areaForce = 0
+
+setInterval(()=>{
+    setVelocity()
+    
+    for(let i in dataJson){
+        for(let j in dataJson[i].atoms){
+            
+            let objectX = dataJson[i].atoms[j].position.posX
+            let objectY = dataJson[i].atoms[j].position.posY
+            let objectWidth = dataJson[i].atoms[j].width
+            let objectHeight = dataJson[i].atoms[j].height
+            let objectColor = dataJson[i].atoms[j].color
+            ctx.clearRect(objectX, objectY, objectWidth, objectHeight)
+
+            let pos = setPositionReview(i, j)
+            
+            if(pos[0] < 0 || pos[0] > innerWidth || pos[1] < 0 || pos[1] > innerHeight){
+                if(dataJson[i].atoms[j].active == false){
+                    dataJson[i].atoms[j].active = true
+                    console.log(dataJson[i].atoms[j].force)
+                    if(dataJson[i].atoms[j].force < 0){
+                        areaForce -= dataJson[i].atoms[j].force
+                    }else{
+                        areaForce += dataJson[i].atoms[j].force
+                    }
+                }
+            }
+
+            setPosition(i, j)
+            objectX = dataJson[i].atoms[j].position.posX
+            objectY = dataJson[i].atoms[j].position.posY
+            objectWidth = dataJson[i].atoms[j].width
+            objectHeight = dataJson[i].atoms[j].height
+            ctx.fillStyle = objectColor;
+            ctx.beginPath();
+            ctx.roundRect(objectX, objectY, objectWidth, objectHeight,50);
+            ctx.fill();
+        }
+    }
+}, 1000/60)
+
+let areaForceElement = document.getElementById("areaForce")
+setInterval(()=>{
+    areaForceElement.innerHTML = areaForce
+}, 1000/60)
